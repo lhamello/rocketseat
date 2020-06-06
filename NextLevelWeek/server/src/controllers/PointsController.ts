@@ -1,4 +1,5 @@
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
+import Knex from '../database/connection';
 
 class PointsController {
 
@@ -16,7 +17,7 @@ class PointsController {
 
         const trx = await Knex.transaction();
 
-        const insertedIds = await trx('points').insert({
+        const point = {
             image: 'image-fake',
             name,
             email,
@@ -25,7 +26,9 @@ class PointsController {
             longitude,
             city,
             uf
-        })
+        };
+
+        const insertedIds = await trx('points').insert(point);
 
         const point_id = insertedIds[0];
 
@@ -38,8 +41,10 @@ class PointsController {
 
         await trx('point_items').insert(pointItems);
 
-        return response.json({ sucess: true })
-        );
+        return response.json({ 
+            id: point_id,
+            ... point,
+         });
     }
 }
 
