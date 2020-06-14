@@ -2,9 +2,10 @@ import { Feather as Icon } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { Marker } from 'react-native-maps';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { SvgUri } from 'react-native-svg';
 
 const Points = () => {
@@ -20,7 +21,7 @@ const Points = () => {
     }
 
     return (
-        <>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
                 <TouchableOpacity onPress={handleNavigateBack}>
                     <Icon name="arrow-left" size={20} color="#34cb79" />
@@ -30,14 +31,15 @@ const Points = () => {
                 <Text style={styles.description}>Encontre no mapa um ponto de coleta.</Text>
 
                 <View style={styles.mapContainer}>
-                    <MapView style={styles.map} initialRegion={{ 
+                    <MapView style={styles.map} initialRegion={{
                         latitude: -30.0323787,
                         longitude: -51.231772,
                         latitudeDelta: 0.014,
-                        longitudeDelta: 0.014, }}>
-                        <Marker 
-                            style={styles.mapMarker} 
-                            coordinate={{latitude: -30.0323787, longitude: -51.231772, }}
+                        longitudeDelta: 0.014,
+                    }}>
+                        <Marker
+                            style={styles.mapMarker}
+                            coordinate={{ latitude: -30.0323787, longitude: -51.231772, }}
                             onPress={hangleNavigateToDetail}>
                             <View style={styles.mapMarkerContainer}>
                                 <Image style={styles.mapMarkerImage} source={{ uri: 'https://images.unsplash.com/photo-1556767576-5ec41e3239ea?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60s' }} />
@@ -79,7 +81,7 @@ const Points = () => {
                     </TouchableOpacity>
                 </ScrollView>
             </View>
-        </>
+        </SafeAreaView>
     );
 };
 
