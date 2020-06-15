@@ -1,14 +1,14 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
-import { Map, TileLayer, Marker } from 'react-leaflet';
-import api from '../../services/api';
-
-import logo from '../../assets/logo.svg';
-
-import './styles.css';
 import axios from 'axios';
 import { LeafletMouseEvent } from 'leaflet';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Map, Marker, TileLayer } from 'react-leaflet';
+import { Link, useHistory } from 'react-router-dom';
+import logo from '../../assets/logo.svg';
+import api from '../../services/api';
+import './styles.css';
+
+
 
 interface Item {
     id: number;
@@ -31,14 +31,22 @@ const CreatePoint = () => {
 
     const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]);
 
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        whatsapp: '',
+    });
+
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
+    const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
+
+    const history = useHistory();
 
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(position => {
             const { latitude, longitude } = position.coords;
-
             setInitialPosition([latitude, longitude]);
         });
     }, []);
@@ -52,7 +60,6 @@ const CreatePoint = () => {
     useEffect(() => {
         axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome').then(response => {
             const ufInitials = response.data.map(uf => uf.sigla);
-
             setUfs(ufInitials);
         });
     });
@@ -61,10 +68,8 @@ const CreatePoint = () => {
         if (selectedUf === '0') {
             return;
         }
-
         axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`).then(response => {
             const cityNames = response.data.map(city => city.nome);
-
             setCities(cityNames);
         });
     }, [selectedUf]);
@@ -86,6 +91,51 @@ const CreatePoint = () => {
         ]);
     }
 
+    function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
+        const { name, value } = event.target;
+
+        setFormData({ ...formData, [name]: value });
+    }
+
+    function handleSelectItem(id: number) {
+        const alreadySelected = selectedItems.findIndex(item => item === id);
+
+        if (alreadySelected >= 0) {
+            const filteredItems = selectedItems.filter(item => item !== id);
+
+            setSelectedItems(filteredItems);
+        } else {
+            setSelectedItems([...selectedItems, id]);
+        }
+    }
+
+    async function handleSubmit(event: FormEvent) {
+        event.preventDefault();
+
+        const { name, email, whatsapp } = formData;
+        const uf = selectedUf;
+        const city = selectedCity;
+        const [latitude, longitude] = selectedPosition;
+        const items = selectedItems;
+
+        const data = {
+            name,
+            email,
+            whatsapp,
+            uf,
+            city,
+            latitude,
+            longitude,
+            items,
+        }
+
+        await api.post('points', data);
+
+        alert('Ponto de coleta cadastrado com sucesso!');
+
+        history.push('/');
+    }
+
     return (
         <div id="page-create-point">
             <header>
@@ -97,7 +147,7 @@ const CreatePoint = () => {
                 </Link>
             </header>
 
-            <form>
+            <form onSubmit={handleSubmit}>
                 <h1>Cadastro do <br /> ponto de coleta</h1>
 
                 <fieldset>
@@ -107,18 +157,18 @@ const CreatePoint = () => {
 
                     <div className="field">
                         <label htmlFor="name">Nome da entidade</label>
-                        <input type="text" name="name" id="name" />
+                        <input type="text" name="name" id="name" onChange={handleInputChange} />
                     </div>
 
                     <div className="field-group">
                         <div className="field">
                             <label htmlFor="name">E-mail</label>
-                            <input type="email" name="email" id="email" />
+                            <input type="email" name="email" id="email" onChange={handleInputChange} />
                         </div>
 
                         <div className="field">
                             <label htmlFor="name">Whatsapp</label>
-                            <input type="text" name="whatsapp" id="whatsapp" />
+                            <input type="text" name="whatsapp" id="whatsapp" onChange={handleInputChange} />
                         </div>
                     </div>
                 </fieldset>
@@ -167,7 +217,7 @@ const CreatePoint = () => {
 
                     <ul className="items-grid">
                         {items.map(item => (
-                            <li key={item.id}>
+                            <li key={String(item.id)} onClick={() => handleSelectItem(item.id)} className={selectedItems.includes(item.id) ? 'selected' : ''}>
                                 <img src={item.image_url} alt={item.title} />
                                 <span>{item.title}</span>
                             </li>
