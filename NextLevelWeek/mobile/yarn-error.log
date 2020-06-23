@@ -1,5 +1,5 @@
 Arguments: 
-  D:\Dev\Arquivos de Programa\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add react-native-svg@11.0.1
+  D:\Dev\Arquivos de Programa\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add mail-composer
 
 PATH: 
   C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\Docker\Docker\Resources\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;D:\Dev\Java\jdk-13.0.1\bin;C:\ProgramData\chocolatey\bin;C:\Program Files (x86)\Yarn\bin\;D:\Dev\Git\cmd;D:\Dev\Cloud\Amazon\AWSCLIV2\;D:\Dev\Arquivos de Programa\nodejs\;D:\Dev\Arquivos de Programa\nodejs\node_modules\npm\bin;D:\Arquivos de Programas\PHP\php-7.3.18-nts-Win32-VC15-x64;D:\Arquivos de Programas\PHP\composer;C:\Users\lhame\AppData\Local\Microsoft\WindowsApps;C:\Users\lhame\AppData\Local\Yarn\bin;D:\Dev\IDEs\Microsoft VS Code\bin;C:\Users\lhame\AppData\Roaming\npm;C:\Users\lhame\AppData\Roaming\Composer\vendor\bin
@@ -14,7 +14,17 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: EPERM: operation not permitted, unlink 'D:\Dev\Projetos\rocketseat\NextLevelWeek\mobile\node_modules\@babel\compat-data\node_modules\.bin'
+  Error: https://registry.yarnpkg.com/mail-composer: Not found
+      at Request.params.callback [as _callback] (C:\Program Files (x86)\Yarn\lib\cli.js:66056:18)
+      at Request.self.callback (C:\Program Files (x86)\Yarn\lib\cli.js:140665:22)
+      at Request.emit (events.js:315:20)
+      at Request.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:141637:10)
+      at Request.emit (events.js:315:20)
+      at IncomingMessage.<anonymous> (C:\Program Files (x86)\Yarn\lib\cli.js:141559:12)
+      at Object.onceWrapper (events.js:421:28)
+      at IncomingMessage.emit (events.js:327:22)
+      at endReadableNT (_stream_readable.js:1201:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
 
 npm manifest: 
   {
@@ -32,6 +42,7 @@ npm manifest:
       "@react-native-community/masked-view": "0.1.6",
       "@react-navigation/native": "^5.5.1",
       "@react-navigation/stack": "^5.5.1",
+      "axios": "^0.19.2",
       "expo": "~37.0.3",
       "expo-constants": "~9.0.0",
       "expo-font": "~8.1.0",
@@ -44,6 +55,7 @@ npm manifest:
       "react-native-reanimated": "~1.7.0",
       "react-native-safe-area-context": "0.7.3",
       "react-native-screens": "~2.2.0",
+      "react-native-svg": "^12.1.0",
       "react-native-web": "~0.11.7"
     },
     "devDependencies": {
